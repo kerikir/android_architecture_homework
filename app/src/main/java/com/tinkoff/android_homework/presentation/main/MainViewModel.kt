@@ -57,33 +57,6 @@ class MainViewModel @Inject constructor(
 
     val uiMapper = OperationToUiItemMapper()
 
-    val db = databaseBuilder(
-        application,
-        AppDatabase::class.java, DATABASE_NAME
-    )
-        .allowMainThreadQueries()
-        .fallbackToDestructiveMigration()
-        .build()
-
-    private fun provideRetrofit(): Retrofit {
-        val interceptor = HttpLoggingInterceptor()
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-
-        val client: OkHttpClient = OkHttpClient.Builder().addInterceptor(interceptor).build()
-
-        val contentType = "application/json".toMediaType()
-        return Retrofit
-            .Builder()
-            .client(client)
-            .addConverterFactory(Json.asConverterFactory(contentType).apply {
-
-            })
-            .baseUrl(BASE_URL)
-            .build()
-    }
-
-    private val internetChecker =  InternetChecker(application)
-
     private val subscribeTotalUseCase = SubscribeTotalUseCaseImpl(
         TotalRepositoryImpl(
             totalDao = db.totalDao(),
