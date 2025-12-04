@@ -3,7 +3,7 @@ package com.tinkoff.android_homework.presentation.detail
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tinkoff.android_homework.data.network.repo.detail.SubscribeDetailRepository
+import com.tinkoff.android_homework.domain.main.usecases.SubscribeDetailUseCase
 import com.tinkoff.android_homework.presentation.model.DetailItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +17,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class DetailViewModel @Inject constructor(
-    private val detailRepository: SubscribeDetailRepository
+    private val subscribeDetailUseCase: SubscribeDetailUseCase
 ) : ViewModel() {
 
     private val _details: MutableStateFlow<DetailItem?> = MutableStateFlow(null)
@@ -28,7 +28,7 @@ class DetailViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val detail = detailRepository.getDetail(0)
+            val detail = subscribeDetailUseCase.getDetail(0)
             Log.e("TAGRTRT", "detail :${detail}")
         }
     }
