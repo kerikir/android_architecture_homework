@@ -21,7 +21,7 @@ class SubscribeDetailRepositoryImpl @Inject constructor(
     private val detailApiToDbMapper: DetailApiToDbMapper,
     private val detailDbToDomainMapper: DetailDbToDomainMapper,
     private val internetChecker: InternetChecker,
-) : IDetailRepository {
+) : SubscribeDetailRepository {
     override suspend fun getDetail(id: Int): Detail {
         if (internetChecker.isInternetAvailable()) {
             val detailApi = detailService.getDetail(id)
