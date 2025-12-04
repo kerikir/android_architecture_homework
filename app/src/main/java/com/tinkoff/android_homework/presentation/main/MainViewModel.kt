@@ -17,7 +17,9 @@ import com.tinkoff.android_homework.data.storage.database.AppDatabase.Companion.
 import com.tinkoff.android_homework.data.storage.mappers.operations.OperationsDbToDomainMapper
 import com.tinkoff.android_homework.data.storage.mappers.total.TotalDbToDomainMapper
 import com.tinkoff.android_homework.di.ApplicationModule.BASE_URL
+import com.tinkoff.android_homework.domain.main.usecases.SubscribeOperationsUseCase
 import com.tinkoff.android_homework.domain.main.usecases.SubscribeOperationsUseCaseImpl
+import com.tinkoff.android_homework.domain.main.usecases.SubscribeTotalUseCase
 import com.tinkoff.android_homework.domain.main.usecases.SubscribeTotalUseCaseImpl
 import com.tinkoff.android_homework.presentation.mappers.operations.OperationToUiItemMapper
 import com.tinkoff.android_homework.presentation.model.operations.OperationItem
@@ -43,7 +45,9 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val application: Application,
+    private val uiMapper: OperationToUiItemMapper,
+    private val subscribeTotalUseCase: SubscribeTotalUseCase,
+    private val subscribeOperationsUseCase: SubscribeOperationsUseCase,
 ) : ViewModel() {
 
     private val _operations: MutableStateFlow<List<OperationItem>> = MutableStateFlow(emptyList())
@@ -55,27 +59,8 @@ class MainViewModel @Inject constructor(
     //TODO Нужные для вьюмодели зависимости лучше передавать через конструктор,
     // а не создавать внутри
 
-    val uiMapper = OperationToUiItemMapper()
 
-    private val subscribeTotalUseCase = SubscribeTotalUseCaseImpl(
-        TotalRepositoryImpl(
-            totalDao = db.totalDao(),
-            totalService = provideRetrofit().create(TotalService::class.java),
-            totalApiToDbMapper = TotalApiToDbMapper(),
-            totalDbToDomainMapper = TotalDbToDomainMapper(),
-            internetChecker =  internetChecker,
-        )
-    )
-    private val subscribeOperationsUseCase = SubscribeOperationsUseCaseImpl(
-        OperationsRepositoryImpl(
-            operationsService = provideRetrofit().create(OperationsService::class.java),
-            operationDao = db.operationDao(),
-            operationsApiToDbMapper = OperationApiToDbMapper(),
-            operationsDbToDomainMapper = OperationsDbToDomainMapper(),
-            internetChecker =  internetChecker,
-        )
-    )
-
+    
     init {
         viewModelScope.launch {
             _operations.value =
