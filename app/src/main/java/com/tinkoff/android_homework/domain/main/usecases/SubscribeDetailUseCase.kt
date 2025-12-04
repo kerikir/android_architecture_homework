@@ -7,12 +7,15 @@ import javax.inject.Inject
 
 interface SubscribeDetailUseCase {
 
-    suspend fun invoke() : Detail
+    suspend fun getDetail(id: Int) : Detail
 }
 
 
 class SubscribeDetailUseCaseImpl @Inject constructor(
     private val repository: SubscribeDetailRepository
 ) : SubscribeDetailUseCase {
-    
+
+    override suspend fun getDetail(id: Int) : Detail {
+        return repository.getDetail(id)
+    }
 }
