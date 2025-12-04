@@ -17,7 +17,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class DetailViewModel @Inject constructor(
-    private val detailRepository: SubscribeDetailUseCase
+    private val subscribeDetailUseCase: SubscribeDetailUseCase
 ) : ViewModel() {
 
     private val _details: MutableStateFlow<DetailItem?> = MutableStateFlow(null)
@@ -28,7 +28,7 @@ class DetailViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val detail = detailRepository.getDetail(0)
+            val detail = subscribeDetailUseCase.getDetail(0)
             Log.e("TAGRTRT", "detail :${detail}")
         }
     }
